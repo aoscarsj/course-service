@@ -2,6 +2,10 @@ package course.core.course.data
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonProperty
+import course.core.module.data.Module
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 import java.io.Serializable
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -11,7 +15,7 @@ import javax.persistence.*
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Entity
 @Table(name = "TB_COURSES")
-class Course(
+data class Course(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     var courseId: UUID? = null,
@@ -33,8 +37,13 @@ class Course(
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     val created: LocalDateTime = LocalDateTime.now(ZoneId.of("UTC")),
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
-    val updated: LocalDateTime? = null
+    val updated: LocalDateTime? = null,
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SUBSELECT) // 1 search to modules and 1 search to all, JOIN -> 1 to all but
+    // lazy doesn't work, SELECT -> N searches, default is JOIN
+    val modules: MutableSet<Module> = mutableSetOf()
 ) : Serializable {
 
     companion object {

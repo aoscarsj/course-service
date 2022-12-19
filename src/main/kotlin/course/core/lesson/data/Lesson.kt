@@ -2,6 +2,8 @@ package course.core.lesson.data
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonProperty
+import course.core.module.data.Module
 import java.io.Serializable
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -25,7 +27,10 @@ class Lesson(
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     val created: LocalDateTime = LocalDateTime.now(ZoneId.of("UTC")),
 
-    ) : Serializable {
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    val module: Module
+) : Serializable {
 
     companion object {
         private const val serialVersionUID: Long = 1L
