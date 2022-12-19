@@ -40,9 +40,10 @@ data class Course(
     val updated: LocalDateTime? = null,
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
-    @Fetch(FetchMode.SUBSELECT) // 1 search to modules and 1 search to all, JOIN -> 1 to all but
-    // lazy doesn't work, SELECT -> N searches, default is JOIN
+    @OneToMany(
+        mappedBy = "course", fetch = FetchType.LAZY
+    )
+    @Fetch(FetchMode.SUBSELECT)
     val modules: MutableSet<Module> = mutableSetOf()
 ) : Serializable {
 
@@ -53,3 +54,17 @@ data class Course(
 
 enum class CourseStatus { IN_PROGRESS, CONCLUDED }
 enum class CourseLevel { BEGINNER, INTERMEDIARY, ADVANCED }
+
+/* COMMENTS
+- @OneToMany(mappedBy = "course", fetch = FetchType.LAZY, cascade = [CascadeType.ALL],
+        orphanRemoval = true) // CascadeType.ALL, orphan => bad performance when there is a lot
+        of data, in this case the responsibility for deletion lies with the JPA.
+OR
+- @OnDelete(action = OnDeleteAction.CASCADE) -> BD is responsibility for deletion, is better, 2
+deletions, 1 to course and 1 to all modules
+OR
+- better is cascade deletion by code.
+
+-@Fetch(FetchMode.SUBSELECT) //SUBSELECT -> 1 search to modules and 1 search to all, JOIN -> 1 to
+ all but lazy doesn't work, SELECT -> N searches (bad), default is JOIN.
+ */
