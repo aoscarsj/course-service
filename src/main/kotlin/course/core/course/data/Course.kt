@@ -20,22 +20,22 @@ data class Course(
     @GeneratedValue(strategy = GenerationType.AUTO)
     var courseId: UUID? = null,
     @Column(nullable = false, length = 150)
-    val name: String,
+    var name: String,
     @Column(nullable = false, length = 250)
-    val description: String,
+    var description: String,
     @Column
-    val imageUrl: String,
+    var imageUrl: String,
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    val status: CourseStatus,
+    var status: CourseStatus,
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    val level: CourseLevel,
+    var level: CourseLevel,
     @Column(nullable = false)
-    val instructorId: UUID,
+    var instructorId: UUID,
     @Column(nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
-    val created: LocalDateTime = LocalDateTime.now(ZoneId.of("UTC")),
+    var created: LocalDateTime = LocalDateTime.now(ZoneId.of("UTC")),
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     val updated: LocalDateTime? = null,
 
@@ -49,6 +49,20 @@ data class Course(
 
     companion object {
         private const val serialVersionUID: Long = 1L
+
+        fun from(courseCreateRequest: CourseRegistrationRequest): Course {
+
+            courseCreateRequest.apply {
+                return Course(
+                    name = name,
+                    description = description,
+                    imageUrl = imageUrl,
+                    status = status,
+                    level = level,
+                    instructorId = instructorId
+                )
+            }
+        }
     }
 }
 
