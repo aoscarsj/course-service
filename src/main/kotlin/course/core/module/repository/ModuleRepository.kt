@@ -12,6 +12,17 @@ interface ModuleRepository : JpaRepository<Module, UUID> {
     fun findByTitle(title: String): Module?
 
     @Query(
+        value = """
+        SELECT * 
+          FROM tb_modules 
+          WHERE course_course_id = :courseId 
+            AND module_id = :moduleId 
+      """, nativeQuery = true
+    )
+    fun findIntoCourse(@Param("courseId") courseId: UUID, @Param("moduleId") moduleId:
+    UUID): Module?
+
+    @Query(
         value = "SELECT * FROM tb_modules WHERE course_course_id = :courseId", nativeQuery = true
     )
     fun findAllModulesIntoCourse(@Param("courseId") courseId: UUID): List<Module>

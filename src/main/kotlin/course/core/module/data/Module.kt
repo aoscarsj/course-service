@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import course.core.course.data.Course
 import course.core.lesson.data.Lesson
+import course.core.module.data.request.ModuleRegistrationRequest
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import java.io.Serializable
@@ -21,9 +22,9 @@ class Module(
     @GeneratedValue(strategy = GenerationType.AUTO)
     var moduleId: UUID? = null,
     @Column(nullable = false, length = 150)
-    val title: String,
+    var title: String,
     @Column(nullable = false, length = 250)
-    val description: String,
+    var description: String,
     @Column(nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     val created: LocalDateTime = LocalDateTime.now(ZoneId.of("UTC")),
@@ -41,5 +42,11 @@ class Module(
 
     companion object {
         private const val serialVersionUID: Long = 1L
+
+        fun from(moduleRegistrationRequest: ModuleRegistrationRequest, course: Course): Module =
+            with(moduleRegistrationRequest) {
+                Module(title = this.title, description = this.description, course = course)
+            }
+
     }
 }

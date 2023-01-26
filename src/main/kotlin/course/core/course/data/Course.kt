@@ -3,6 +3,7 @@ package course.core.course.data
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
+import course.core.course.data.request.CourseRegistrationRequest
 import course.core.module.data.Module
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode

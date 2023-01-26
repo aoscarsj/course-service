@@ -2,8 +2,8 @@ package course.core.course.rest.v1
 
 import course.common.rest.RestResponse
 import course.core.course.data.Course
-import course.core.course.data.CourseRegistrationRequest
-import course.core.course.data.CourseUpdateRequest
+import course.core.course.data.request.CourseRegistrationRequest
+import course.core.course.data.request.CourseUpdateRequest
 import course.core.course.service.CourseService
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*

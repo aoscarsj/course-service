@@ -1,8 +1,8 @@
 package course.core.course.service
 
 import course.core.course.data.Course
-import course.core.course.data.CourseRegistrationRequest
-import course.core.course.data.CourseUpdateRequest
+import course.core.course.data.request.CourseRegistrationRequest
+import course.core.course.data.request.CourseUpdateRequest
 import java.util.*
 
 interface CourseService {

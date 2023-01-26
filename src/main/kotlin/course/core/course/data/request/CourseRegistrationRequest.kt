@@ -1,5 +1,7 @@
-package course.core.course.data
+package course.core.course.data.request
 
+import course.core.course.data.CourseLevel
+import course.core.course.data.CourseStatus
 import java.util.*
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
