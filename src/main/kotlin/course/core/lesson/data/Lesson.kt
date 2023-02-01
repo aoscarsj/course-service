@@ -3,6 +3,7 @@ package course.core.lesson.data
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
+import course.core.lesson.data.request.LessonRegistrationRequest
 import course.core.module.data.Module
 import java.io.Serializable
 import java.time.LocalDateTime
@@ -18,11 +19,11 @@ class Lesson(
     @GeneratedValue(strategy = GenerationType.AUTO)
     var lessonId: UUID? = null,
     @Column(nullable = false, length = 150)
-    val title: String,
+    var title: String,
     @Column(nullable = false, length = 250)
-    val description: String,
+    var description: String,
     @Column(nullable = false)
-    val videoUrl: String,
+    var videoUrl: String,
     @Column(nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     val created: LocalDateTime = LocalDateTime.now(ZoneId.of("UTC")),
@@ -34,5 +35,15 @@ class Lesson(
 
     companion object {
         private const val serialVersionUID: Long = 1L
+
+        fun from(lessonRegistrationRequest: LessonRegistrationRequest, module: Module): Lesson =
+            with(lessonRegistrationRequest) {
+                Lesson(
+                    title = title,
+                    description = description,
+                    videoUrl = videoUrl,
+                    module = module
+                )
+            }
     }
 }
