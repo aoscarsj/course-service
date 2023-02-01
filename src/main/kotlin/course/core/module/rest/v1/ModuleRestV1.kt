@@ -1,6 +1,7 @@
 package course.core.module.rest.v1
 
 import course.common.rest.RestResponse
+import course.core.course.service.CourseService
 import course.core.module.data.Module
 import course.core.module.data.request.ModuleRegistrationRequest
 import course.core.module.data.request.ModuleUpdateRequest
@@ -13,7 +14,8 @@ import javax.validation.Valid
 @RestController
 @CrossOrigin(origins = ["*"], maxAge = 3600)
 class ModuleRestV1(
-    private val moduleService: ModuleService
+    private val moduleService: ModuleService,
+    private val courseService: CourseService
 ) {
 
     @PostMapping("/courses/{courseId}/modules")
@@ -22,7 +24,9 @@ class ModuleRestV1(
         @RequestBody @Valid moduleRegistrationRequest: ModuleRegistrationRequest,
     ): RestResponse<Module> {
 
-        val module = moduleService.create(courseId, moduleRegistrationRequest)
+        val course = courseService.find(courseId)
+        val module = moduleService.create(course, moduleRegistrationRequest)
+
         return RestResponse(
             "Module was successfully created", response = module, httpStatus =
             HttpStatus.CREATED

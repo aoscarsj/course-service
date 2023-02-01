@@ -1,6 +1,6 @@
 package course.core.module.service.impl
 
-import course.core.course.service.CourseService
+import course.core.course.data.Course
 import course.core.lesson.service.LessonService
 import course.core.module.data.Module
 import course.core.module.data.request.ModuleRegistrationRequest
@@ -18,7 +18,6 @@ import java.util.*
 class ModuleServiceImpl(
     private val moduleRepository: ModuleRepository,
     private val lessonService: LessonService,
-    private val courseService: CourseService
 ) : ModuleService {
     @Transactional
     override fun delete(courseId: UUID, moduleId: UUID) {
@@ -57,13 +56,24 @@ class ModuleServiceImpl(
     override fun findAllIntoCourse(courseId: UUID): List<Module> =
         moduleRepository.findAllModulesIntoCourse(courseId)
 
-    override fun create(
-        courseId: UUID,
-        moduleRegistrationRequest: ModuleRegistrationRequest
-    ): Module {
+    @Transactional
+    override fun removeAllIntoCourse(courseId: UUID) {
 
-        val course = courseService.find(courseId)
+        val modules = findAllIntoCourse(courseId)
 
-        return moduleRepository.save(Module.from(moduleRegistrationRequest, course))
+        if (modules.isNotEmpty()) {
+
+            for (module in modules)
+                lessonService.removeAllIntoModule(module.moduleId!!)
+
+            moduleRepository.deleteAll(modules)
+        }
     }
+
+    override fun create(
+        course: Course,
+        moduleRegistrationRequest: ModuleRegistrationRequest
+    ): Module =
+        moduleRepository.save(Module.from(moduleRegistrationRequest, course))
+
 }
