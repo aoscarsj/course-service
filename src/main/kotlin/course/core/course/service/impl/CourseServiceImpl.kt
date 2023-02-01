@@ -7,8 +7,7 @@ import course.core.course.exception.CourseException
 import course.core.course.exception.CourseRegistrationException
 import course.core.course.repository.CourseRepository
 import course.core.course.service.CourseService
-import course.core.lesson.repository.LessonRepository
-import course.core.module.repository.ModuleRepository
+import course.core.module.service.ModuleService
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus.CONFLICT
 import org.springframework.http.HttpStatus.NOT_FOUND
@@ -20,25 +19,13 @@ import java.util.*
 @Service
 class CourseServiceImpl(
     private val courseRepository: CourseRepository,
-    private val moduleRepository: ModuleRepository,
-    private val lessonRepository: LessonRepository
+    private val moduleService: ModuleService
 ) : CourseService {
     @Transactional // only transaction if something goes wrong, return
     override fun delete(courseId: UUID) {
 
         val course = find(courseId)
-        val modules = moduleRepository.findAllModulesIntoCourse(courseId)
-
-        if (modules.isNotEmpty()) {
-
-            for (module in modules) {
-
-                val lessons = lessonRepository.findAllLessonsIntoModule(module.moduleId!!)
-                if (lessons.isNotEmpty())
-                    lessonRepository.deleteAll(lessons)
-            }
-            moduleRepository.deleteAll(modules)
-        }
+        moduleService.removeAllIntoCourse(courseId)
         courseRepository.delete(course)
     }
 
