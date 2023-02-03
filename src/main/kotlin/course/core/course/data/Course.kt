@@ -35,9 +35,9 @@ data class Course(
     @Column(nullable = false)
     var instructorId: UUID,
     @Column(nullable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ISO_LOCAL_DATE)
     var created: LocalDateTime = LocalDateTime.now(ZoneId.of("UTC")),
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ISO_LOCAL_DATE)
     val updated: LocalDateTime? = null,
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -50,6 +50,7 @@ data class Course(
 
     companion object {
         private const val serialVersionUID: Long = 1L
+        private const val ISO_LOCAL_DATE = "yyyy-MM-dd'T'HH:mm:ss'Z'"
 
         fun from(courseCreateRequest: CourseRegistrationRequest): Course {
 

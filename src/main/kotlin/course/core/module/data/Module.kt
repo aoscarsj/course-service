@@ -17,7 +17,7 @@ import javax.persistence.*
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Entity
 @Table(name = "TB_MODULES")
-class Module(
+data class Module(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     var moduleId: UUID? = null,
@@ -26,7 +26,7 @@ class Module(
     @Column(nullable = false, length = 250)
     var description: String,
     @Column(nullable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ISO_LOCAL_DATE)
     val created: LocalDateTime = LocalDateTime.now(ZoneId.of("UTC")),
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -42,6 +42,7 @@ class Module(
 
     companion object {
         private const val serialVersionUID: Long = 1L
+        private const val ISO_LOCAL_DATE = "yyyy-MM-dd'T'HH:mm:ss'Z'"
 
         fun from(moduleRegistrationRequest: ModuleRegistrationRequest, course: Course): Module =
             with(moduleRegistrationRequest) {
