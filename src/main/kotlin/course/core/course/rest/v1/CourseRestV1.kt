@@ -3,8 +3,13 @@ package course.core.course.rest.v1
 import course.common.rest.RestResponse
 import course.core.course.data.Course
 import course.core.course.data.request.CourseRegistrationRequest
+import course.core.course.data.request.CourseSearchRequest
 import course.core.course.data.request.CourseUpdateRequest
 import course.core.course.service.CourseService
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -45,8 +50,13 @@ class CourseRestV1(
     }
 
     @GetMapping
-    fun findAll(): RestResponse<List<Course>> =
-        RestResponse("Courses was collected", courseService.findAll())
+    fun findAll(
+        searchRequest: CourseSearchRequest,
+        @PageableDefault(
+            page = 0, size = 10, sort = ["courseId"], direction = Sort.Direction.ASC
+        ) page: Pageable
+    ): RestResponse<Page<Course>> =
+        RestResponse("Courses was collected", courseService.findAll(searchRequest, page))
 
     @GetMapping("/{courseId}")
     fun find(@PathVariable(value = "courseId") courseId: UUID): RestResponse<Course> =
