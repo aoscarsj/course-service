@@ -66,10 +66,10 @@ data class Course(
             }
         }
     }
-}
 
-enum class CourseStatus { IN_PROGRESS, CONCLUDED }
-enum class CourseLevel { BEGINNER, INTERMEDIARY, ADVANCED }
+    enum class CourseStatus { IN_PROGRESS, CONCLUDED }
+    enum class CourseLevel { BEGINNER, INTERMEDIARY, ADVANCED }
+}
 
 /* COMMENTS
 - @OneToMany(mappedBy = "course", fetch = FetchType.LAZY, cascade = [CascadeType.ALL],
